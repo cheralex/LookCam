@@ -120,4 +120,4 @@ python tools/check_service_js.py
 node tools/check_i18n.mjs
 ```
 
-The service test currently has 74 checks and uses only loopback emulators.
+The service test currently has 75 checks and uses only loopback emulators.

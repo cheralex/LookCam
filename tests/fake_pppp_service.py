@@ -107,6 +107,7 @@ class FakePpppCamera:
         self.acks: list[tuple[int, list[int]]] = []
         self.close_count = 0
         self.logged_in = False
+        self.appoint: dict | None = None
         self.wifi_requested: dict | None = None
         self.download_userid = 0
         self.download_patch = ""
@@ -236,6 +237,7 @@ class FakePpppCamera:
                 "time": 0, "timeStatus": 0, "csType": 1,
             } if ok else {"cmd": "LoginDev", "result": -1})
         elif cmd == "AppointDev":
+            self.appoint = dict(msg)
             self._respond({"cmd": "AppointDev", "state": 0})
         elif cmd == "GetDevInfo":
             self._respond({

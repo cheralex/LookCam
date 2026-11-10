@@ -135,15 +135,23 @@ class CommandBus:
         return msg
 
     async def appoint_time(self, tz_hours: int | None = None) -> None:
-        """AppointDev{state:3}: time synchronization after login (500 ms pause)."""
-        tz = proto.local_tz_hours() if tz_hours is None else int(tz_hours)
+        """AppointDev{state:3}: time synchronization after login (500 ms pause).
+
+        The APK sends local wall-clock seconds, not UTC: it adds the current
+        timezone offset (DST included) to ``System.currentTimeMillis()/1000``.
+        ``zone`` is the whole-hour offset and ``zone_s`` the exact second offset.
+        """
+        tz_s = proto.local_tz_seconds()
+        tz = int(tz_s / 3600) if tz_hours is None else int(tz_hours)
+        if tz_hours is not None:
+            tz_s = tz * 3600
         await self.send({
             "cmd": "AppointDev",
             "state": 3,
             "pwd": getattr(self.session, "password", ""),
             "zone": tz,
-            "zone_s": tz * 3600,
-            "time": int(time.time()),
+            "zone_s": tz_s,
+            "time": int(time.time()) + tz_s,
         })
         await asyncio.sleep(0.5)
 

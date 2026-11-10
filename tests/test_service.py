@@ -288,6 +288,17 @@ async def run_checks(app: ServiceApp, cam_a: FakePpppCamera, cam_b: FakePpppCame
     check("WS camA: есть ключевой кадр", any(m["flags"] & 1 for m in video_a))
     check("WS camB: есть ключевой кадр", any(m["flags"] & 1 for m in video_b))
 
+    # 2.0. AppointDev must carry local wall-clock seconds, like the APK.
+    appoint = cam_a.appoint or {}
+    tz_s = proto.local_tz_seconds()
+    now = time.time()
+    check("AppointDev: zone/zone_s и локальное время",
+          appoint.get("zone") == int(tz_s / 3600)
+          and appoint.get("zone_s") == tz_s
+          and abs(int(appoint.get("time") or 0) - (now + tz_s)) <= 15,
+          f"zone={appoint.get('zone')} zone_s={appoint.get('zone_s')} "
+          f"time={appoint.get('time')} tz_s={tz_s}")
+
     # 2.1. MSE path: init segment + fMP4 fragments
     ws_mp4 = await WS.connect(app.http.port, "/ws/live-mp4/cam-a")
     mp4_msgs = await collect(ws_mp4, 3.0)

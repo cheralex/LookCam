@@ -172,15 +172,24 @@ def did_from_punch(ident: bytes, field2: bytes, value: int) -> str:
 
 # ------------------------------------------------------------------ time
 
-def local_tz_hours(ts: float | None = None) -> int:
-    """Local timezone offset in whole hours (what the app puts into byte 5)."""
+def local_tz_seconds(ts: float | None = None) -> int:
+    """Local timezone offset in seconds at ``ts`` (DST included)."""
     try:
         dt = (_dt.datetime.fromtimestamp(time.time() if ts is None else ts)
               .astimezone())
         off = dt.utcoffset()
-        return int(off.total_seconds() // 3600) if off else 0
+        return int(off.total_seconds()) if off else 0
     except Exception:
         return 0
+
+
+def local_tz_hours(ts: float | None = None) -> int:
+    """Local timezone offset in whole hours (what the app puts into byte 5).
+
+    The app computes whole hours by truncating the seconds offset toward zero,
+    so use the same rule for negative half-hour zones.
+    """
+    return int(local_tz_seconds(ts) / 3600)
 
 
 # ------------------------------------------------------------------ packets
