@@ -19,7 +19,22 @@ $ErrorActionPreference = "Stop"
 $pythonPath = (Get-Command $Python -ErrorAction Stop).Source
 $workDir = (Resolve-Path $ProjectDir).Path
 
-$arguments = "-m service --config `"$Config`" --log-file `"$LogFile`""
+function Resolve-TaskPath([string]$Path) {
+    if ([System.IO.Path]::IsPathRooted($Path)) {
+        return [System.IO.Path]::GetFullPath($Path)
+    }
+    return [System.IO.Path]::GetFullPath((Join-Path $workDir $Path))
+}
+
+$configPath = Resolve-TaskPath $Config
+$logPath = Resolve-TaskPath $LogFile
+foreach ($dir in @((Split-Path -Parent $configPath), (Split-Path -Parent $logPath))) {
+    if ($dir -and -not (Test-Path -LiteralPath $dir)) {
+        New-Item -ItemType Directory -Force -Path $dir | Out-Null
+    }
+}
+
+$arguments = "-m service --config `"$configPath`" --log-file `"$logPath`""
 $action = New-ScheduledTaskAction -Execute $pythonPath -Argument $arguments `
     -WorkingDirectory $workDir
 $trigger = New-ScheduledTaskTrigger -AtStartup
@@ -34,6 +49,7 @@ Register-ScheduledTask -TaskName $TaskName -Action $action -Trigger $trigger `
 Write-Host "Task '$TaskName' registered."
 Write-Host "  python : $pythonPath"
 Write-Host "  workdir: $workDir"
-Write-Host "  config : $Config"
+Write-Host "  config : $configPath"
+Write-Host "  log    : $logPath"
 Write-Host "Start now: Start-ScheduledTask -TaskName '$TaskName'"
 Write-Host "Remove:    Unregister-ScheduledTask -TaskName '$TaskName' -Confirm:`$false"

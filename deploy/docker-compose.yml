@@ -1,7 +1,7 @@
 services:
   lookcam:
     build:
-      # Context is the lookcam_deepsik package itself; external lookcam is not needed.
+      # Context is the repository root; external lookcam is not needed.
       context: ..
       dockerfile: deploy/Dockerfile
     image: lookcam-service:latest
@@ -10,8 +10,10 @@ services:
     network_mode: host
     restart: unless-stopped
     volumes:
-      - ../config:/app/lookcam_deepsik/config
+      # Paths are relative to this compose file (deploy/).
+      - ../config:/app/config
       - ../lookcam_data:/app/lookcam_data
     environment:
       - TZ=Europe/Moscow
-    # RTSP/HTTP listen on 0.0.0.0; PPPP is UDP 32108 in the host namespace.
+    # HTTP bind comes from config (0.0.0.0 by default). RTSP stays on loopback
+    # until config sets rtsp.bind and an RTSP password.

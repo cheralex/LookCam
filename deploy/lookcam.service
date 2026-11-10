@@ -5,10 +5,13 @@ Wants=network-online.target
 
 [Service]
 Type=simple
-# The whole package lives in /opt/lookcam/lookcam_deepsik; external lookcam is not needed.
+# The repository root is installed at /opt/lookcam; no nested package directory.
 WorkingDirectory=/opt/lookcam
-ExecStart=/usr/bin/python3 -m lookcam_deepsik.service \
-    --config /opt/lookcam/lookcam_deepsik/config/lookcam_service.json \
+# Create and own the cache and log directories automatically.
+StateDirectory=lookcam
+LogsDirectory=lookcam
+ExecStart=/usr/bin/python3 -m service \
+    --config /opt/lookcam/config/lookcam_service.json \
     --cache-dir /var/lib/lookcam \
     --log-file /var/log/lookcam/service.log
 Restart=on-failure
@@ -20,9 +23,10 @@ AmbientCapabilities=
 NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=strict
-ReadWritePaths=/var/lib/lookcam /var/log/lookcam /opt/lookcam/lookcam_deepsik/config
+ReadWritePaths=/var/lib/lookcam /var/log/lookcam /opt/lookcam/config
 # If the cache and config live elsewhere, add them to ReadWritePaths.
 Environment=PYTHONUNBUFFERED=1
+Environment=PYTHONDONTWRITEBYTECODE=1
 
 [Install]
 WantedBy=multi-user.target
