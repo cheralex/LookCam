@@ -14,6 +14,20 @@ Self-contained PPPP/PPCS camera service with a web UI, RTSP bridge, SD-card acce
 - English/Russian web UI.
 - systemd, Docker and Windows Task Scheduler deployment files.
 
+## Screenshots
+
+Android app (APK):
+
+| My Devices | Add Device |
+|---|---|
+| ![My Devices](docs/screenshots/android-my-devices.png) | ![Add Device](docs/screenshots/android-add-device.png) |
+
+Web UI with a synthetic demo camera stream:
+
+![Web UI live view](docs/screenshots/web-live.png)
+
+The video frame is a generated test pattern. No real camera footage or identifiers are used.
+
 ## Requirements
 
 - Python 3.9 or newer.
