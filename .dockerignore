@@ -1,0 +1,9 @@
+# Docker context is the self-contained lookcam_deepsik package.
+__pycache__/
+*.py[cod]
+lookcam_data/
+tools/_live*/
+tools/_js_check/
+tests/_service_tmp/
+config/lookcam_service.json
+.gitignore

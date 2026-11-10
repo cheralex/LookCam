@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LookCam Service</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="topbar" id="topbar" hidden>
+    <div class="brand">Look<span>Cam</span></div>
+    <a href="#/" data-i18n="nav.cameras">Cameras</a>
+    <a href="#/add" data-i18n="nav.add">Add camera</a>
+    <a href="#/wifi" data-i18n="nav.wifi">Camera Wi-Fi</a>
+    <span class="spacer"></span>
+    <span class="muted small" id="server-info"></span>
+    <label class="lang-switch" title="Language / Язык">
+      <select id="lang-switch" data-lang aria-label="Language / Язык"></select>
+    </label>
+    <button id="logout" class="small" data-i18n="nav.logout">Sign out</button>
+  </header>
+  <main id="app"><div class="wrap muted" data-i18n="common.loading">Loading…</div></main>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

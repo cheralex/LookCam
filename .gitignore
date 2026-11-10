@@ -1,0 +1,19 @@
+# Runtime data and secrets are not part of the repository.
+lookcam_data/
+config/lookcam_service.json
+
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.venv/
+venv/
+
+*.log
+*.temp
+*.seek
+*.seek.json
+
+tests/_service_tmp/
+tools/_live*/
+tools/_js_check/

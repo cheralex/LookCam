@@ -1,0 +1,17 @@
+services:
+  lookcam:
+    build:
+      # Context is the lookcam_deepsik package itself; external lookcam is not needed.
+      context: ..
+      dockerfile: deploy/Dockerfile
+    image: lookcam-service:latest
+    # Host network only: LanSearch is a UDP broadcast into the camera subnet; from
+    # bridge it goes to the wrong place, and port 32108 cannot be published.
+    network_mode: host
+    restart: unless-stopped
+    volumes:
+      - ../config:/app/lookcam_deepsik/config
+      - ../lookcam_data:/app/lookcam_data
+    environment:
+      - TZ=Europe/Moscow
+    # RTSP/HTTP listen on 0.0.0.0; PPPP is UDP 32108 in the host namespace.

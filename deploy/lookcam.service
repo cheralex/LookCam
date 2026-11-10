@@ -1,0 +1,28 @@
+[Unit]
+Description=LookCam service (PPPP + web + RTSP bridge)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+# The whole package lives in /opt/lookcam/lookcam_deepsik; external lookcam is not needed.
+WorkingDirectory=/opt/lookcam
+ExecStart=/usr/bin/python3 -m lookcam_deepsik.service \
+    --config /opt/lookcam/lookcam_deepsik/config/lookcam_service.json \
+    --cache-dir /var/lib/lookcam \
+    --log-file /var/log/lookcam/service.log
+Restart=on-failure
+RestartSec=5
+User=lookcam
+Group=lookcam
+# PPPP listens on UDP 32108, HTTP on 8080, RTSP on 8554.
+AmbientCapabilities=
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths=/var/lib/lookcam /var/log/lookcam /opt/lookcam/lookcam_deepsik/config
+# If the cache and config live elsewhere, add them to ReadWritePaths.
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target

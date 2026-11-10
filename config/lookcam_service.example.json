@@ -1,0 +1,37 @@
+{
+  "http": {"bind": "0.0.0.0", "port": 8080},
+  "rtsp": {
+    "enable": true,
+    "bind": "127.0.0.1",
+    "port": 8554,
+    "user": "viewer",
+    "password_hash": "",
+    "realm": "LookCam",
+    "low_latency": true
+  },
+  "admin": {
+    "password_hash": "",
+    "auth": true,
+    "cookie_secret": "",
+    "session_hours": 72,
+    "login_attempts": 8,
+    "login_window_s": 300
+  },
+  "cache_dir": "../lookcam_data",
+  "cache_limit_mb": 4096,
+  "idle_ttl_s": 30,
+  "log_level": "INFO",
+  "debug_raw": false,
+  "cameras": [
+    {
+      "id": "garage",
+      "name": "Garage",
+      "did": "G016638JHDXM",
+      "password": "123456",
+      "host_hint": "192.168.100.1",
+      "quality": "HD",
+      "keep_alive": false,
+      "enabled": true
+    }
+  ]
+}
